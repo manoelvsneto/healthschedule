@@ -5,7 +5,7 @@ namespace Health.Schedule.Service
 {
     public interface IUserService : IService<User>
     {
-
+        Task<DataReturn> Validate(string query);
     }
     public interface IService<T>
     {

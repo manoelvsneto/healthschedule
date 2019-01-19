@@ -36,5 +36,17 @@ namespace Health.Schedule.WebApi.Controllers
         {
             return await userService.Add(value);
         }
+
+        /// <summary>
+        /// Validate
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Validate/{query}")]
+        public async Task<DataReturn> Validate(string query)
+        {
+            return await userService.Validate(query);
+        }
     }
 }

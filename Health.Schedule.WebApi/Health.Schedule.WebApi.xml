@@ -27,5 +27,12 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="M:Health.Schedule.WebApi.Controllers.UserController.Validate(System.String)">
+            <summary>
+            Validate
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

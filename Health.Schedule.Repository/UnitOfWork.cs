@@ -1,24 +1,57 @@
 ﻿using Health.Schedule.Data;
-
+using System;
+using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 namespace Health.Schedule.Repository
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork<TContext> : IRepositoryFactory, IUnitOfWork<TContext>, IUnitOfWork
+        where TContext : DbContext, IDisposable
     {
-        public DataContext Context { get; }
+        private Dictionary<Type, object> _repositories;
 
-        public UnitOfWork(DataContext context)
+        public UnitOfWork(TContext context)
         {
-            Context = context;
+            Context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public void Commit()
+
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {
-            Context.SaveChanges();
+            if (_repositories == null) _repositories = new Dictionary<Type, object>();
+
+            var type = typeof(TEntity);
+            if (!_repositories.ContainsKey(type)) _repositories[type] = new Repository<TEntity>(Context);
+            return (IRepository<TEntity>)_repositories[type];
+        }
+
+        public IRepositoryAsync<TEntity> GetRepositoryAsync<TEntity>() where TEntity : class
+        {
+            if (_repositories == null) _repositories = new Dictionary<Type, object>();
+
+            var type = typeof(TEntity);
+            if (!_repositories.ContainsKey(type)) _repositories[type] = new RepositoryAsync<TEntity>(Context);
+            return (IRepositoryAsync<TEntity>)_repositories[type];
+        }
+
+        public IRepositoryReadOnly<TEntity> GetReadOnlyRepository<TEntity>() where TEntity : class
+        {
+            if (_repositories == null) _repositories = new Dictionary<Type, object>();
+
+            var type = typeof(TEntity);
+            if (!_repositories.ContainsKey(type)) _repositories[type] = new RepositoryReadOnly<TEntity>(Context);
+            return (IRepositoryReadOnly<TEntity>)_repositories[type];
+        }
+
+        public TContext Context { get; }
+
+        public int SaveChanges()
+        {
+            return Context.SaveChanges();
         }
 
         public void Dispose()
         {
-            Context.Dispose();
-
+            Context?.Dispose();
         }
     }
 }

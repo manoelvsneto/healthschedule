@@ -14,7 +14,7 @@ namespace HealthSchedule.DataAccess
         public async Task<dynamic> Execute(string route, dynamic data, Method method)
         {
             var request = new RestRequest(route, method);
-            IRestResponse t =  await client.ExecuteTaskAsync(request,data);
+            IRestResponse t =   client.ExecuteTaskAsync(request,data);
             return t.Content;
         }
     }

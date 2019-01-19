@@ -8,12 +8,10 @@ namespace Health.Schedule.Service
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _uow;
-        private readonly IRepository<User> _repo;
 
-        public UserService(IUnitOfWork unit, IRepository<User> repo)
+        public UserService(IUnitOfWork unit)
         {
             _uow = unit;
-            _repo = repo;
         }
 
         public async Task<DataReturn> Add(User classe)
@@ -23,8 +21,8 @@ namespace Health.Schedule.Service
             dataReturn.Message = "Success";
             try
             {
-                await _repo.Add(classe);
-                _uow.Commit();
+                await _uow.GetRepositoryAsync<User>().AddAsync(classe);
+                _uow.SaveChanges();
                 dataReturn.Data = true;
             }
             catch (Exception ex)
@@ -44,6 +42,27 @@ namespace Health.Schedule.Service
         public async Task<DataReturn> Update(User classe)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<DataReturn> Validate(string query)
+        {
+
+            DataReturn dataReturn = new DataReturn();
+            dataReturn.Code = 0;
+            dataReturn.Message = "Success";
+            try
+            {
+                string email = query.Split('|')[0];
+                string password = query.Split('|')[0];
+
+                User dados = await _uow.GetRepositoryAsync<User>().SingleAsync(x => x.Email == email && x.Password == password);
+                dataReturn.Data = dados.UserGuid;
+            }
+            catch (Exception ex)
+            {
+                dataReturn.ExceptionError = ex;
+            }
+            return dataReturn;
         }
     }
 }

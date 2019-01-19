@@ -1,5 +1,4 @@
 ﻿using Health.Schedule.Data;
-using Health.Schedule.Repository;
 using Health.Schedule.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,8 +27,7 @@ namespace Health.Schedule.WebApi
         {
             services.AddCors();
             services.AddOptions();
-            services.AddDbContext<DataContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+          
       
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -38,11 +36,13 @@ namespace Health.Schedule.WebApi
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
+            string dbConnString = Configuration.GetConnectionString("SampleDB");
+            services.AddDbContext<DataContext>(options =>
+                   options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"),
+                   builder => builder.MigrationsAssembly(typeof(Startup).Assembly.FullName)
+                   )).AddUnitOfWork<DataContext>();
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-            services.AddTransient(typeof(IUserService), typeof(UserService));
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app)
