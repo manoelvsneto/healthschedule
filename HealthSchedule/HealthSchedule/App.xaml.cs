@@ -1,5 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -7,11 +6,19 @@ namespace HealthSchedule
 {
     public partial class App : Application
     {
+        public static bool IsUserLoggedIn { get; set; }
+
+
         public App()
         {
-            InitializeComponent();
-
-            MainPage = new MainPage();
+            if (!IsUserLoggedIn)
+            {
+                MainPage = new NavigationPage(new LoginPage());
+            }
+            else
+            {
+                MainPage = new NavigationPage(new HealthSchedule.MainPage());
+            }
         }
 
         protected override void OnStart()

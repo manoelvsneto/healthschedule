@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Health.Schedule.WebApi</name>
+    </assembly>
+    <members>
+        <member name="T:Health.Schedule.WebApi.Controllers.UserController">
+            <summary>
+            UserController
+            </summary>
+        </member>
+        <member name="F:Health.Schedule.WebApi.Controllers.UserController.userService">
+            <summary>
+            IUserService
+            </summary>
+        </member>
+        <member name="M:Health.Schedule.WebApi.Controllers.UserController.#ctor(Health.Schedule.Service.IUserService)">
+            <summary>
+            
+            </summary>
+            <param name="service"></param>
+        </member>
+        <member name="M:Health.Schedule.WebApi.Controllers.UserController.Post(Health.Schedule.Shared.User)">
+            <summary>
+            POST api/user
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
